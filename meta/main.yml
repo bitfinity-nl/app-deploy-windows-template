@@ -1,0 +1,18 @@
+galaxy_info:
+  author: L. Rutten
+  description: Template role for deploying applications to Windows
+  company: Bitfinity-NL
+  license: MIT
+  min_ansible_version: 2.4
+  platforms:
+  - name: Ubuntu
+    versions:
+    - Windows 7 or higher
+    - Windows server 2k8r2 or higher
+  galaxy_tags: 
+    - Deploy
+    - Applications
+    - Template
+    - ActiveDirectory
+    - Domain
+    - Windows

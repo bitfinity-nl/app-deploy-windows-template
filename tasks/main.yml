@@ -1,0 +1,21 @@
+---
+  # Title: < Title of the package >
+  # Author: < Author name >
+  #
+  # Version: 1.00
+  # File: tasks/windows-x86.yml
+  #
+  # Description:
+  #   Ansible template for installing windows applications
+
+  - name: "For OS: Windows, Arch: x86"
+    import_tasks: windows-x86.yml
+    when:
+      - ansible_os_family == "Windows"
+      - ansible_architecture == "32-bit"
+
+  - name: "For OS: Windows, Arch: amd64"
+    import_tasks: windows-amd64.yml
+    when:
+      - ansible_os_family == "Windows"
+      - ansible_architecture == "64-bit"

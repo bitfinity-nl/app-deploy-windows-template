@@ -1,0 +1,55 @@
+---
+  # Title: < Title of the package >
+  # Author: < Author name >
+  #
+  # Version: 1.00
+  # File: tasks/windows-x86.yml
+  #
+  # Description:
+  #   Ansible template for installing windows applications
+  #
+  #   1. Bundle the files in a zip package and upload package to a Web (repository server)
+  #   2. Edit defaults/windows-x86.yml
+
+  - name: "Check if package is allready installed before downloading installation files."
+    win_reg_stat:
+      path: HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\"{{ pkg_product_id }}"
+    register: pkg_isinstalled
+
+  - name: "Create local Ansible repository"
+    win_file:
+      path: "{{ pkg_local_path }}"
+      state: directory
+    when:
+      - pkg_isinstalled.exists == false
+
+  - name: "Download Package"
+    win_get_url:
+      url: "{{ pkg_remote_url }}"
+      dest: "{{ pkg_local_path }}/{{ pkg_name_zip }}"
+      force: no
+    when:
+      - pkg_isinstalled.exists == false
+
+  - name: "Unzip package"
+    win_unzip:
+      src: "{{ pkg_local_path }}/{{ pkg_name_zip }}"
+      dest: "{{ pkg_local_path }}"
+    when:
+      - pkg_isinstalled.exists == false
+
+  - name: "Installing {{ pkg_name }} (x86)"
+    win_package:
+      path: "{{ pkg_installer }}"
+      product_id: "{{ pkg_product_id }}"
+      arguments: "{{ pkg_arguments }}"
+      state: present
+    when:
+      - pkg_isinstalled.exists == false
+    
+  - name: "Removing installation files"
+    win_file:
+      path: "{{ pkg_local_path }}"
+      state: absent
+    when:
+      - pkg_isinstalled.exists == false

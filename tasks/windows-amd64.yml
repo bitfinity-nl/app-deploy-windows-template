@@ -1,0 +1,55 @@
+---
+  # Title: < Title of the package >
+  # Author: < Author name >
+  #
+  # Version: 1.00
+  # File: tasks/windows-amd64.yml
+  #
+  # Description:
+  #   Ansible template for installing windows applications
+  #
+  #   1. Bundle the files in a zip package and upload package to a Web (repository server)
+  #   2. Edit defaults/windows-amd64.yml
+
+  - name: "Check if package is allready installed before downloading installation files."
+    win_reg_stat:
+      path: "{{ pkg_reg_uninstall_path_amd64 }}{{ pkg_product_id_amd64 }}"
+    register: pkg_isinstalled
+
+  - name: "Create local Ansible repository"
+    win_file:
+      path: "{{ pkg_local_path }}"
+      state: directory
+    when:
+      - pkg_isinstalled.exists == false
+
+  - name: "Download Package"
+    win_get_url:
+      url: "{{ pkg_remote_url_amd64 }}"
+      dest: "{{ pkg_local_path }}/{{ pkg_name_zip_amd64 }}"
+      force: no
+    when:
+      - pkg_isinstalled.exists == false
+
+  - name: "Unzip package"
+    win_unzip:
+      src: "{{ pkg_local_path }}/{{ pkg_name_zip_amd64 }}"
+      dest: "{{ pkg_local_path }}"
+    when:
+      - pkg_isinstalled.exists == false
+
+  - name: "Installing {{ pkg_name }} (amd64)"
+    win_package:
+      path: "{{ pkg_installer_amd64 }}"
+      product_id: "{{ pkg_product_id_amd64 }}"
+      arguments: "{{ pkg_arguments_amd64 }}"
+      state: present
+    when:
+      - pkg_isinstalled.exists == false
+
+  - name: "Removing installation files"
+    win_file:
+      path: "{{ pkg_local_path }}"
+      state: absent
+    when:
+      - pkg_isinstalled.exists == false

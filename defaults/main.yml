@@ -1,0 +1,36 @@
+---
+  # Title: < Title of the package >
+  # Author: < Author name >
+  #
+  # Version: 1.00
+  # File: defaults/main.yml
+  #
+  # Description:
+  #   < Description of the package >
+
+  # --- Common settings ---
+  # Title of the package
+  pkg_name              : '"< package name >"'
+
+  # Path to local package
+  pkg_local_path        : '{{ ansible_env.ProgramFiles }}\\Ansible\\temp'
+
+  # --- Specifick (x86) package settings ---
+  pkg_remote_url        : '< example: http://nl-bel-cmd01/resource/RES/10.1.100.0/RES.zip >'
+  pkg_name_zip          : '< example: RES.zip >'
+  pkg_product_id        : '< example: {6C3683DE-A9F3-4BFA-BDF4-337860D52039} >'
+  pkg_installer         : '< example: {{ pkg_local_path }}\\RES\\RES ONE Workspace 10.1.100.0.msi >'
+  pkg_arguments         : '< example: DBSERVER=server01\sqlexpress DBNAME=database DBUSER=database DBPASSWORD=Secret >'
+
+  # --- Specific (amd64) package settings ---
+
+  # Uncomment the line which key to check. (Wow6432Node = 32bit)
+  # pkg_reg_uninstall_path_amd64 : 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\'
+  pkg_reg_uninstall_path_amd64 : 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\'
+
+  pkg_remote_url_amd64   : '{{ pkg_remote_url }}'
+  pkg_name_zip_amd64     : '{{ pkg_name_zip }}'
+  pkg_product_id_amd64   : '{{ pkg_product_id }}'
+  pkg_installer_amd64    : '{{ pkg_installer }}'
+  pkg_arguments_amd64    : '{{ pkg_arguments }}'
+
