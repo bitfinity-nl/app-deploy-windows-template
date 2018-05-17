@@ -6,15 +6,6 @@ galaxy_info:
   min_ansible_version: 2.4
   platforms:
   - name: Windows
-    versions:
-    - 7
-    - 8.1
-    - 10
-    - 2008R2
-    - 2012
-    - 2012R2
-    - 2016
-    - 2016R2
   galaxy_tags: 
     - Deploy
     - Applications
